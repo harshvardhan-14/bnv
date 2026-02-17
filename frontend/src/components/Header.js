@@ -1,0 +1,14 @@
+import React from 'react';
+import '../styles/Header.css';
+
+function Header() {
+  return (
+    <header className="header">
+      <div className="header-content">
+        <h1 className="header-title">MERN stack developer practical task</h1>
+      </div>
+    </header>
+  );
+}
+
+export default Header;
