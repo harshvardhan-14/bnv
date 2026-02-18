@@ -1,4 +1,5 @@
 import React from 'react';
+import { getImageURL } from '../services/api.js';
 import '../styles/UserCard.css';
 
 function UserCard({ user }) {
@@ -37,7 +38,7 @@ function UserCard({ user }) {
             <div className="profile-picture-container">
               {user.profilePicture ? (
                 <img 
-                  src={`http://localhost:5000${user.profilePicture}`} 
+                  src={getImageURL(user.profilePicture)} 
                   alt="Profile" 
                   className="profile-image-large"
                 />

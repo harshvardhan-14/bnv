@@ -4,6 +4,14 @@ const { validationResult } = require('express-validator');
 // Get all users with pagination
 exports.getAllUsers = async (req, res) => {
   try {
+    if (!global.mongoConnected) {
+      return res.status(503).json({
+        success: false,
+        message: 'Database is not connected. Please check MongoDB connection.',
+        error: 'SERVICE_UNAVAILABLE'
+      });
+    }
+
     const { page = 1, limit = 10, sortBy = 'createdAt', order = 'desc' } = req.query;
     
     const pageNumber = Math.max(1, parseInt(page) || 1);
@@ -30,9 +38,10 @@ exports.getAllUsers = async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('❌ Error in getAllUsers:', error.message);
     res.status(400).json({
       success: false,
-      message: error.message
+      message: error.message || 'Failed to fetch users'
     });
   }
 };

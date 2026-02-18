@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import Header from '../components/Header';
-import UserCard from '../components/UserCard';
-import { userAPI } from '../services/api';
+import Header from '../components/Header.jsx';
+import UserForm from '../components/UserForm.jsx';
+import { userAPI } from '../services/api.js';
 import '../styles/Pages.css';
 
-function ViewPage() {
+function EditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -28,10 +28,16 @@ function ViewPage() {
     fetchUser();
   }, [id, navigate]);
 
+  const handleSubmit = async (formData) => {
+    const response = await userAPI.updateUser(id, formData);
+    toast.success(response.message || 'User updated successfully');
+    return response;
+  };
+
   if (loading) {
     return (
       <div className="page">
-        <Header title="View User" />
+        <Header />
         <main className="page-content">
           <div className="loading">Loading user data...</div>
         </main>
@@ -41,30 +47,12 @@ function ViewPage() {
 
   return (
     <div className="page">
-      <Header title="View User Details" />
+      <Header />
       <main className="page-content">
-        {user && (
-          <>
-            <UserCard user={user} />
-            <div className="view-page-actions">
-              <button 
-                className="btn btn-edit"
-                onClick={() => navigate(`/edit/${id}`)}
-              >
-                Edit User
-              </button>
-              <button 
-                className="btn btn-back"
-                onClick={() => navigate('/')}
-              >
-                Back to List
-              </button>
-            </div>
-          </>
-        )}
+        {user && <UserForm onSubmit={handleSubmit} initialData={user} />}
       </main>
     </div>
   );
 }
 
-export default ViewPage;
+export default EditPage;

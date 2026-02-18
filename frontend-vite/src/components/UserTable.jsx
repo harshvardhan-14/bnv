@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { userAPI } from '../services/api';
+import { userAPI, getImageURL } from '../services/api.js';
 import '../styles/UserTable.css';
 
 function UserTable() {
@@ -13,6 +13,7 @@ function UserTable() {
   const [isSearching, setIsSearching] = useState(false);
   const [sortBy, setSortBy] = useState('createdAt');
   const [order, setOrder] = useState('desc');
+  const [dbError, setDbError] = useState(null);
   const navigate = useNavigate();
   const itemsPerPage = 10;
 
@@ -23,6 +24,7 @@ function UserTable() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
+      setDbError(null);
       let response;
       
       if (isSearching && searchQuery) {
@@ -34,7 +36,16 @@ function UserTable() {
       setUsers(response.data.data);
       setTotalPages(response.data.pagination.pages);
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to fetch users');
+      const errorMessage = error.response?.data?.message || 'Failed to fetch users';
+      const errorCode = error.response?.status;
+      
+      if (errorCode === 503 || errorMessage.includes('Database')) {
+        setDbError('Database connection failed. Please ensure MongoDB Atlas is running and your IP is whitelisted. Check the backend logs for details.');
+        console.error('Database error:', errorMessage);
+      } else {
+        toast.error(errorMessage);
+      }
+      
       setUsers([]);
     } finally {
       setLoading(false);
@@ -137,7 +148,11 @@ function UserTable() {
         </div>
       </div>
 
-      {loading ? (
+      {dbError ? (
+        <div className="error-message">
+          <strong>⚠️ Error:</strong> {dbError}
+        </div>
+      ) : loading ? (
         <div className="loading">Loading users...</div>
       ) : users.length === 0 ? (
         <div className="no-data">No users found</div>
@@ -179,7 +194,7 @@ function UserTable() {
                     <td>
                       {user.profilePicture ? (
                         <img 
-                          src={`http://localhost:5000${user.profilePicture}`} 
+                          src={getImageURL(user.profilePicture)} 
                           alt="Profile" 
                           className="profile-thumbnail"
                         />

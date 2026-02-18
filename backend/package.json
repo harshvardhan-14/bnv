@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "build": "echo 'Backend build - no build step needed'"
   },
   "keywords": [],
   "author": "",
@@ -21,5 +22,8 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }

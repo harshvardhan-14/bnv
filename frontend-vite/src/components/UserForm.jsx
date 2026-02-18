@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { validateForm } from '../utils/validation';
+import { validateForm } from '../utils/validation.js';
 import '../styles/UserForm.css';
 
 function UserForm({ onSubmit, initialData = null, isLoading = false }) {

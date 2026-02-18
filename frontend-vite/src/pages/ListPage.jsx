@@ -1,6 +1,6 @@
 import React from 'react';
-import Header from '../components/Header';
-import UserTable from '../components/UserTable';
+import Header from '../components/Header.jsx';
+import UserTable from '../components/UserTable.jsx';
 import '../styles/Pages.css';
 
 function ListPage() {
