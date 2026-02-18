@@ -36,6 +36,6 @@
   },
   "devDependencies": {
     "postcss-selector-parser": "^7.1.1",
-    "react-scripts": "^5.0.2"
+    "react-scripts": "5.0.1"
   }
 }
